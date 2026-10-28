@@ -1,0 +1,36 @@
+# Ambientes Virtuais
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Caches e arquivos compilados do Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# Arquivos de distribuicao e empacotamento
+build/
+dist/
+*.egg-info/
+
+# Arquivos de configuracao de IDEs e editores locais
+.vscode/
+.idea/
+.antigravity/
+*.code-workspace
+*.swp
+*.swo
+*~
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs e arquivos temporarios
+*.log
+*.tmp
