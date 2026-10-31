@@ -1,353 +1,234 @@
 # 🕹️ Tetris em Python + Tkinter
 
-Projeto acadêmico colaborativo de desenvolvimento do clássico jogo **Tetris**, construído em linguagem **Python** com interface gráfica nativa em **Tkinter**.
+Projeto acadêmico colaborativo de desenvolvimento do clássico jogo **Tetris**, estruturado rigorosamente segundo a **arquitetura orientada a objetos proposta pelo professor**, implementado em **Python** com interfaces para **Console (Terminal)** e **Interface Gráfica (Tkinter)**.
 
 ---
 
 ## 🎯 1. Objetivo do Projeto
 
-Este projeto tem finalidade estritamente pedagógica e colaborativa. Desenvolvido por uma equipe de **quatro alunos iniciantes**, o objetivo central é aplicar conceitos fundamentais de programação estruturada/modular, manipulação de interface gráfica no Tkinter e fluxo de trabalho em equipe utilizando controle de versão com **Git e GitHub**.
+Este projeto tem finalidade estritamente pedagógica e acadêmica. Desenvolvido por uma equipe de **quatro alunos iniciantes**, o objetivo principal é aplicar conceitos fundamentais de programação orientada a objetos (POO), tais como:
 
-O projeto foi dividido em quatro partes modulares e independentes, permitindo que cada estudante se aprofunde em um aspecto da mecânica do jogo, culminando na integração harmoniosa de todos os componentes em um jogo completo e jogável.
+- **Classes, Objetos e Imutabilidade** (criação de blocos imutáveis em `block.py`).
+- **Herança e Polimorfismo** (classe abstrata `Tetrimino` e as 7 peças clássicas em `tetriminos.py`).
+- **Tratamento de Exceções Personalizadas** (`GamerError`, `InvalidBlockError`, `InvalidRotationError` em `exceptions.py`).
+- **Separação entre Modelo e Visão** (o motor de regras `tetris.py` não depende de nenhuma interface visual).
+- **Múltiplas Interfaces Desacopladas** (interface textual em console `tetris_terminal.py` e interface gráfica em Tkinter `tetris_gui.py`).
+- **Trabalho Colaborativo via Git e GitHub** (uso de branches individuais, revisões de código e Pull Requests).
 
-> **Importante:** Nesta etapa inicial, o projeto contém apenas a **organização estrutural**, a documentação e os arquivos com comentários e marcadores `TODO`. Nenhuma lógica de jogo funcional foi implementada ainda.
-
----
-
-## 🛠️ 2. Tecnologias Utilizadas e Ambiente Híbrido
-
-- **Linguagem:** [Python 3](https://www.python.org/) (Versão recomendada: **Python 3.10 ou superior**, mínimo Python 3.8)
-- **Interface Gráfica:** [Tkinter](https://docs.python.org/3/library/tkinter.html) (biblioteca gráfica padrão do Python)
-- **Controle de Versão:** [Git](https://git-scm.com/) e [GitHub](https://github.com/) (Repositório Privado compartilhado)
-- **Editores de Código Suportados:**
-  - **Antigravity IDE:** Utilizado pelo proprietário do projeto.
-  - **Visual Studio Code (VS Code):** Utilizado pelos outros três integrantes da equipe.
+> ⚠️ **IMPORTANTE: A PROGRAMAÇÃO AINDA NÃO COMEÇOU**  
+> Nesta etapa preparatória, **nenhum código funcional foi implementado**. Todos os módulos contêm **exclusivamente comentários explicativos e marcadores `# TODO`**. O projeto está estruturado e documentado para que cada integrante inicie sua parte de forma independente e coordenada.
 
 ---
 
-## 💻 3. Compatibilidade entre Antigravity e VS Code
+## 🏛️ 2. Arquitetura do Professor e Divisão em Camadas
 
-Como a equipe utilizará editores diferentes, estabelecemos **10 Regras de Ouro** para garantir 100% de compatibilidade e evitar problemas de integração:
+A arquitetura do projeto foi desenhada para desacoplar a lógica das regras do jogo da forma como ele é exibido ao usuário:
 
-1. **Arquivos Python Padrão:** Todos os arquivos de código são arquivos comuns `.py`, sem sintaxes especiais, metadados ou dependências exclusivas de um editor.
-2. **Sem Dependência de Extensões Proprietárias:** Nenhum recurso do jogo dependerá de plugins ou extensões exclusivas do Antigravity ou do VS Code.
-3. **Caminhos Puramente Relativos:** É terminantemente proibido utilizar caminhos absolutos no código (ex: `C:\Users\lucas\...` ou `/home/usuario/...`). Todos os arquivos, importações e eventuais recursos devem usar caminhos relativos ao diretório do projeto.
-4. **Consistência de Nomes e Pastas:** A estrutura de diretórios e a nomenclatura dos arquivos é fixa e idêntica para todos os integrantes.
-5. **Git e GitHub como Canal Único Oficial:** Toda sincronização de código entre os editores é feita obrigatoriamente via Git e GitHub. Não há transferência de arquivos por e-mail, pen drive ou mensagens avulsas.
-6. **Abertura Direta da Mesma Pasta:** A pasta raiz do projeto (`tetris-python-tkinter`) pode ser aberta diretamente no Antigravity ou no VS Code sem qualquer necessidade de recriar a estrutura.
-7. **Fluxo Padronizado de Trabalho:** Todos os 4 integrantes utilizam os mesmos comandos de terminal para clonar, criar branches, commitar e enviar Pull Requests.
-8. **Versões Compatíveis do Python:** Todos os integrantes devem utilizar Python 3.8+ (preferencialmente Python 3.10+ ou superior) e verificar o suporte ao Tkinter antes de codificar.
-9. **Privacidade e Segurança de Configurações:** Arquivos de workspace locais (`.vscode/`, `.antigravity/`, `.idea/`), variáveis de ambiente locais e eventuais tokens estão explicitamente ignorados no `.gitignore`.
-10. **Escopo Preservado:** Nenhum código funcional do Tetris foi implementado nesta etapa; todos os arquivos contêm apenas estrutura e comentários de planejamento.
-
----
-
-## 👥 4. Identificação da Equipe, Editores e Responsabilidades
-
-Preencha os campos abaixo com os dados dos quatro integrantes da equipe:
-
-| Papel | Arquivo Responsável | Editor Utilizado | Nome do Integrante | Matrícula / E-mail | Usuário GitHub |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Proprietário** | `parte1_tabuleiro.py` | **Antigravity** | _[Preencher Nome]_ | _[Preencher Matrícula]_ | _@[usuario]_ |
-| **Integrante 2** | `parte2_pecas.py` | **VS Code** | _[Preencher Nome]_ | _[Preencher Matrícula]_ | _@[usuario]_ |
-| **Integrante 3** | `parte3_colisoes.py` | **VS Code** | _[Preencher Nome]_ | _[Preencher Matrícula]_ | _@[usuario]_ |
-| **Integrante 4** | `parte4_jogo_completo.py` | **VS Code** | _[Preencher Nome]_ | _[Preencher Matrícula]_ | _@[usuario]_ |
-
-### Detalhamento das Atribuições:
-
-1. **Integrante 1 (Proprietário) — Tabuleiro e Interface Visual (`parte1_tabuleiro.py`)**
-   - Criação da janela da aplicação Tkinter.
-   - Configuração do `Canvas` e cálculo da área útil do jogo.
-   - Definição do tamanho das células (pixels) e dimensões da grade (largura x altura).
-   - Renderização visual da grade, do fundo e das células preenchidas.
-
-2. **Integrante 2 — Peças e Movimentação (`parte2_pecas.py`)**
-   - Definição das 7 peças tradicionais do Tetris (I, J, L, O, S, T, Z) e suas cores.
-   - Representação matemática das formas e seus estados de rotação.
-   - Controle das coordenadas e movimentação da peça ativa (esquerda, direita, queda).
-
-3. **Integrante 3 — Colisões e Eliminação de Linhas (`parte3_colisoes.py`)**
-   - *Módulo de maior complexidade lógica esperada.*
-   - Validação de limites da tela (paredes esquerda, direita e fundo).
-   - Detecção de colisão entre a peça em movimento e blocos já fixados.
-   - Fixação da peça no tabuleiro quando atinge o repouso.
-   - Identificação de linhas completas, remoção dessas linhas, descida dos blocos superiores e contagem de linhas limpas.
-
-4. **Integrante 4 — Integração e Controle Geral (`parte4_jogo_completo.py`)**
-   - Ponto de entrada (`main`) da aplicação.
-   - Importação e articulação dos módulos dos Integrantes 1, 2 e 3.
-   - Gerenciamento do ciclo temporal do jogo (`after` do Tkinter).
-   - Captura e mapeamento dos eventos do teclado (setas, espaço, pause).
-   - Controle de pontuação, nível, aceleração de velocidade e tela de Game Over.
-   - *Nota ética:* O Integrante 4 coordena a integração e não deve fazer o trabalho dos demais colegas.
+```text
+┌─────────────────────────────────────────────────────────────────┐
+│                     CAMADA DE APRESENTAÇÃO                      │
+│   tetris_terminal.py (Texto)        tetris_gui.py (Tkinter)     │
+└────────────────────────────────┬────────────────────────────────┘
+                                 │ consome (apenas consulta e comandos)
+┌────────────────────────────────▼────────────────────────────────┐
+│                   CAMADA DE NEGÓCIO / MODELO                    │
+│                            tetris.py                            │
+│           (Tabuleiro 10x18, colisões, linhas, controle)         │
+└────────────────────────────────┬────────────────────────────────┘
+                                 │ utiliza
+┌────────────────────────────────▼────────────────────────────────┐
+│                     CAMADA DE PEÇAS E FORMAS                    │
+│                         tetriminos.py                           │
+│        (Tetrimino abstrato, 7 subclasses, 4 rotações)           │
+└────────────────────────────────┬────────────────────────────────┘
+                                 │ composto por
+┌────────────────────────────────▼────────────────────────────────┐
+│                      CAMADA BASE / DOMÍNIO                      │
+│             block.py (Bloco imutável com coords x, y)           │
+│             exceptions.py (Hierarquia de erros GamerError)      │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## 📁 5. Estrutura do Projeto
+## 📁 3. Estrutura de Arquivos do Projeto
 
-O repositório é limpo e não contém arquivos proprietários ou desnecessários de configuração:
+A organização de diretórios e arquivos foi padronizada da seguinte forma:
 
 ```text
 tetris-python-tkinter/
 │
-├── README.md                 # Apresentação do projeto, compatibilidade, tutoriais e roteiro
-├── .gitignore                # Protege contra caches do Python, arquivos de SO, VS Code e Antigravity
+├── README.md                 # Documentação completa, tutoriais de ambiente e fluxo Git
+├── .gitignore                # Proteção contra caches, ambientes virtuais e arquivos locais
 │
-├── parte1_tabuleiro.py       # Esqueleto do módulo de tabuleiro e interface visual
-├── parte2_pecas.py           # Esqueleto do módulo de peças, formas e movimentação
-├── parte3_colisoes.py        # Esqueleto do módulo de colisões e eliminação de linhas
-├── parte4_jogo_completo.py   # Esqueleto do módulo integrador e controle geral do jogo
+├── exceptions.py             # Hierarquia oficial de exceções (GamerError, InvalidBlockError, InvalidRotationError)
+├── block.py                  # Bloco imutável constituinte com coordenadas (x, y)
+├── tetriminos.py             # Classe abstrata Tetrimino e as 7 peças (I, J, L, O, S, T, Z)
+├── tetris.py                 # Modelo central: grade 10x18, física, colisões e controle
+├── tetris_terminal.py        # Interface textual em console para testes rápidos
+├── tetris_gui.py             # Interface gráfica construída com Tkinter (Canvas, timer 500ms)
 │
 └── tests/
-    └── README.md             # Guia e diretrizes para testes futuros
+    └── README.md             # Guia de testes unitários e de integração futuros
 ```
 
 ---
 
-## 🔗 6. Informações do Repositório Oficial
+## 👥 4. Divisão dos Integrantes e Responsabilidades Definidas
 
-- **Proprietário:** Seventx77
-- **Nome do Repositório:** `tetris-python-tkinter`
-- **URL do Repositório:** [https://github.com/Seventx77/tetris-python-tkinter](https://github.com/Seventx77/tetris-python-tkinter)
-- **URL para Clonagem (HTTPS):** `https://github.com/Seventx77/tetris-python-tkinter.git`
-- **Branch Principal Prevista:** `main`
+A divisão de tarefas entre os quatro integrantes **já está formalmente definida e fixada**. Cada integrante é responsável exclusivo pelo desenvolvimento do seu módulo:
 
----
+| Integrante | Arquivos Atribuídos | Responsabilidade Definida | Editor de Trabalho |
+| :--- | :--- | :--- | :--- |
+| **Integrante 1 (Proprietário)** | `exceptions.py`<br>`block.py` | Exceções oficiais (`GamerError`) e classe `Block` imutável com validação de negativos. | **Antigravity** |
+| **Integrante 2** | `tetriminos.py` | Classe abstrata `Tetrimino`, cálculo de `box_size`, fórmula de rotação e as 7 subclasses. | **VS Code** |
+| **Integrante 3** | `tetris.py` | Modelo de jogo: matriz 10x18, posicionamento inicial, colisão, travamento (`_lock`) e linhas. | **VS Code** |
+| **Integrante 4** | `tetris_terminal.py`<br>`tetris_gui.py` | Interfaces com usuário: console ANSI e aplicação Tkinter com Canvas, timer de 500ms e botão Reiniciar. | **VS Code** |
 
-## ⚙️ 7. Como Convidar os Colegas no GitHub (Configuração Inicial)
-
-Por padrão, apenas o proprietário do repositório (`Seventx77`) possui permissão de escrita no repositório privado. Para que os outros 3 integrantes (usuários do VS Code) possam enviar suas branches diretamente:
-
-1. O proprietário deve acessar o repositório no GitHub: [https://github.com/Seventx77/tetris-python-tkinter](https://github.com/Seventx77/tetris-python-tkinter).
-2. Clicar na aba superior **Settings** (Configurações).
-3. No menu lateral esquerdo, clicar em **Collaborators** (Colaboradores).
-4. Clicar no botão verde **Add people** (Adicionar pessoas).
-5. Digitar o nome de usuário no GitHub ou e-mail de cada um dos outros 3 colegas e confirmar.
-6. **Atenção:** Cada colega convidado receberá um e-mail com o convite (ou um alerta na barra de notificações do GitHub) e **deve aceitar o convite** antes de conseguir enviar qualquer branch.
+> **Nota de colaboração:** O Integrante 4 coordena as interfaces que consomem `Tetris`, sem implementar as regras dos outros módulos. Cada integrante testa sua parte antes de integrá-la.
 
 ---
 
-## 🖥️ 8. Configuração do Ambiente e Abertura nos Editores
+## 🪜 5. Ordem de Implementação Recomendada pelo Professor
 
-### A. No Antigravity IDE (Proprietário)
-1. **Abrir a pasta do projeto:**
-   - Abra o Antigravity.
-   - Clique em **File > Open Folder...** (ou no botão de abrir pasta).
-   - Navegue até a pasta `tetris-python-tkinter` e selecione-a.
-2. **Abrir o Terminal Integrado:**
-   - Use o atalho `Ctrl + '` (ou acesse o menu superior `Terminal > New Terminal`).
-3. **Verificar Python e Git:**
-   - No terminal, execute os comandos de verificação detalhados na seção 9 (Passo 1).
+Para garantir uma integração suave, o desenvolvimento deve seguir o encadeamento de dependências:
 
----
-
-### B. No Visual Studio Code (Integrantes 2, 3 e 4)
-1. **Abrir a pasta do projeto:**
-   - Abra o VS Code.
-   - Clique em **File > Open Folder...** (ou use o atalho `Ctrl + K, Ctrl + O`).
-   - Selecione a pasta clonada `tetris-python-tkinter`.
-   - *Nota:* Não é necessário criar nenhum arquivo `.code-workspace` nem pastas adicionais. O VS Code reconhecerá os arquivos Python imediatamente.
-2. **Extensão Opcional (Recomendada para conveniência):**
-   - Na barra lateral esquerda do VS Code, clique no ícone de **Extensions** (`Ctrl + Shift + X`).
-   - Procure por `Python` (desenvolvida pela Microsoft) e clique em **Install**. Essa extensão oferece apenas coloração de código e autocompletar; o código funcionará perfeitamente com ou sem ela.
-3. **Abrir o Terminal Integrado:**
-   - Use o atalho `Ctrl + '` (ou acesse o menu superior `Terminal > New Terminal`).
-4. **Verificar Python e Git:**
-   - No terminal do VS Code, execute os comandos de verificação detalhados na seção 9 (Passo 1).
+1. **Fase 1 — Base (`exceptions.py` e `block.py`):**
+   - Implementação das exceções e da classe `Block`.
+   - É a base para as formas das peças.
+2. **Fase 2 — Formas e Rotações (`tetriminos.py`):**
+   - Implementação da classe base `Tetrimino` e das 7 subclasses clássicas.
+   - Teste no console com `print(peca)` e `peca.right_rotate()`.
+3. **Fase 3 — Motor de Regras (`tetris.py`):**
+   - Implementação do tabuleiro 10x18 (`_grid`), posicionamento, colisões, `_lock()` e `_clear_rows()`.
+4. **Fase 4 — Interfaces (`tetris_terminal.py` e `tetris_gui.py`):**
+   - Interface textual primeiro (para validar jogabilidade no terminal).
+   - Interface gráfica Tkinter em seguida (Canvas com timer de queda de 500ms).
 
 ---
 
-## 🚀 9. Tutorial Passo a Passo de Git e GitHub para Iniciantes
+## 🎮 6. Regras e Especificações Oficiais do Tetris (PDF)
 
-Este tutorial é válido tanto para quem usa o terminal integrado do **Antigravity** quanto para quem usa o terminal integrado do **VS Code**.
+- **Dimensões do Tabuleiro:** 10 colunas de largura por 18 linhas de altura (`DEFAULT_WIDTH = 10`, `DEFAULT_HEIGHT = 18`).
+- **Sistema de Coordenadas:** Padrão Canvas ($x$ coluna cresce para a direita; $y$ linha cresce para baixo).
+- **Indexação da Matriz Interna:** `_grid[coluna][linha]`. Posições vazias contêm `None`; posições fixadas contêm a cor hex (`#rrggbb`).
+- **Peça Ativa:** Não é gravada no `_grid` enquanto está em queda, somente quando for fixada (`_lock()`).
+- **Fórmula de Rotação Horária (90°):**
+  $$\text{nova\_x} = \text{box\_size} - 1 - y, \quad \text{nova\_y} = x$$
+- **Cálculo do `box_size`:** $1 + \max(x, y)$ entre todos os blocos da forma original (rotação 0).
+- **Posicionamento da Nova Peça:** Centralizada no topo: `col = (width - box_size) // 2`, `row = 0`.
+- **Regra de Fim de Jogo:**
+  - Ocorre se a nova peça sorteada não couber imediatamente na posição de entrada.
+  - **Depois do fim de jogo, os comandos de movimento não têm efeito.**
+- **Desacoplamento das Interfaces:**
+  - As interfaces **não implementam nenhuma regra de física ou colisão**. Elas apenas consultam `width`, `height`, `color_at(col, row)`, `game_over` e enviam os comandos de ação.
 
-### Passo 1: Verificar se Git, Python e Tkinter estão instalados
-No terminal do seu editor (Antigravity ou VS Code), digite:
+---
 
+## 💻 7. Compatibilidade entre Antigravity e VS Code
+
+- **Arquivos Python Padrão:** O código usa Python padrão sem recursos proprietários.
+- **Caminhos Relativos:** Todas as importações usam referências diretas no mesmo pacote.
+- **Ambiente Limpo:** Arquivos de workspace locais (`.vscode/`, `.antigravity/`, caches) estão devidamente ignorados no `.gitignore`.
+
+---
+
+## 🚀 8. Fluxo Oficial Git e GitHub: Branches e Pull Requests
+
+### Regra Fundamental
+**Ninguém desenvolve diretamente na branch `main`!** A branch `main` é reservada exclusivamente para código revisado e aprovado. Cada integrante deve trabalhar obrigatoriamente em sua própria branch.
+
+---
+
+### Passo 1: Abrir o terminal no editor e verificar ambiente
 ```bash
-# 1. Verifica o Git
 git --version
-
-# 2. Verifica o Python (se python não responder no Windows, tente py --version)
 python --version
-```
-Em seguida, faça o teste interativo do **Tkinter**:
-```bash
 python -m tkinter
 ```
-> Uma pequena janela gráfica intitulada *"Tk"* com botões de exemplo deve aparecer na sua tela. Feche-a para confirmar que a interface gráfica está funcionando no seu sistema operacional!
-> *(Em distribuições Linux baseadas em Debian/Ubuntu, caso o comando falhe, basta instalar com `sudo apt install python3-tk`).*
 
 ---
 
-### Passo 2: Clonar o repositório oficial
-Navegue até a pasta de sua preferência e clone o repositório:
+### Passo 2: Atualizar a cópia local da `main`
+Antes de criar ou atualizar sua branch:
 ```bash
-git clone https://github.com/Seventx77/tetris-python-tkinter.git
-cd tetris-python-tkinter
+git switch main
+git pull origin main
 ```
 
-> **Atenção ao Primeiro Envio (Repositório Vazio ou Divergência):**
-> Se o repositório remoto estiver vazio no GitHub e a estrutura inicial tiver sido gerada na máquina local do proprietário, verifique com `git status` e `git remote -v`. O proprietário deve inicializar o Git (`git init`), conectar a origem remota (`git remote add origin https://github.com/Seventx77/tetris-python-tkinter.git`), conferir que não está sobrescrevendo nada indesejado e enviar a branch `main` inicial. **Nunca use `git push --force` sem extrema certeza**, para não apagar o trabalho de ninguém.
+---
+
+### Passo 3: Criar e ativar sua branch individual de trabalho
+Cada integrante cria sua respectiva branch a partir da base atualizada:
+
+```bash
+# Integrante 1 (Exceções e Bloco):
+git switch -c feature/bloco-excecoes
+
+# Integrante 2 (Tetraminós e Rotação):
+git switch -c feature/tetriminos
+
+# Integrante 3 (Motor Tetris):
+git switch -c feature/motor-tetris
+
+# Integrante 4 (Interfaces Terminal e GUI):
+git switch -c feature/interfaces
+```
 
 ---
 
-### Passo 3: Abrir a pasta no seu editor
-- **Se você for o Proprietário:** Abra a pasta no **Antigravity** conforme a Seção 8A.
-- **Se você for um dos Integrantes:** Abra a pasta no **VS Code** conforme a Seção 8B.
-
----
-
-### Passo 4: Verificar o estado do repositório
-Antes de começar qualquer trabalho, confira em qual branch você está:
+### Passo 4: Fazer alterações e registrar commits claros
+Após editar seu arquivo atribuído:
 ```bash
 git status
+git add <arquivo_modificado>
+git commit -m "Implementa validacao de coordenadas em Block"
 ```
 
 ---
 
-### Passo 5: Criar sua branch própria de trabalho
-**Regra de ouro:** Ninguém deve alterar diretamente a branch `main`! Cada integrante deve criar e trabalhar na sua branch específica:
-
+### Passo 5: Publicar a branch individual no GitHub
+Na primeira publicação da sua branch:
 ```bash
-# Integrante 1 (Proprietário - Antigravity):
-git switch -c feature/parte1-tabuleiro
-
-# Integrante 2 (Peças - VS Code):
-git switch -c feature/parte2-pecas
-
-# Integrante 3 (Colisões - VS Code):
-git switch -c feature/parte3-colisoes
-
-# Integrante 4 (Integração - VS Code):
-git switch -c feature/parte4-integracao
+git push -u origin feature/sua-branch
 ```
-*(O comando `git switch -c` cria a branch e muda para ela instantaneamente).*
+*(Nos envios seguintes na mesma branch, basta executar `git push`).*
 
 ---
 
-### Passo 6: Editar seu arquivo e adicionar alterações
-Após editar o arquivo sob sua responsabilidade, adicione as alterações para a área de preparação (*staging*):
-```bash
-# Exemplo para o Integrante 2:
-git add parte2_pecas.py
-
-# Ou para adicionar os arquivos modificados:
-git add .
-```
-
----
-
-### Passo 7: Registrar alterações com commit
-Crie um commit claro em português descrevendo sua evolução:
-```bash
-git commit -m "Define matrizes das 7 pecas e funcoes de rotacao"
-```
-
----
-
-### Passo 8: Publicar sua branch no GitHub
-Na primeira vez que for enviar sua nova branch ao repositório:
-```bash
-# Exemplo para a branch do Integrante 2:
-git push -u origin feature/parte2-pecas
-```
-*(Nos envios futuros na mesma branch, bastará digitar apenas `git push`).*
-
----
-
-### Passo 9: Criar um Pull Request (PR) no GitHub
-1. Abra o navegador em: [github.com/Seventx77/tetris-python-tkinter](https://github.com/Seventx77/tetris-python-tkinter).
-2. O GitHub exibirá uma faixa amarela com o botão: **"Compare & pull request"**. Clique nele.
-3. Certifique-se de que a base é `main` e a comparação é a sua branch (ex: `feature/parte2-pecas`).
-4. Escreva um resumo amigável explicando o que você programou.
+### Passo 6: Abrir um Pull Request (PR) no GitHub
+1. Acesse o repositório oficial: [https://github.com/Seventx77/tetris-python-tkinter](https://github.com/Seventx77/tetris-python-tkinter).
+2. O GitHub exibirá o botão verde **"Compare & pull request"**. Clique nele.
+3. Verifique se a **base branch** é `main` e a **compare branch** é a sua (`feature/sua-branch`).
+4. Dê um título claro e descreva em tópicos o que foi implementado e como testar.
 5. Clique em **"Create pull request"**.
 
 ---
 
-### Passo 10: Revisar e integrar as alterações (Code Review)
-1. Antes do merge, os colegas de equipe abrem a aba **"Files changed"** no GitHub e revisam o código.
-2. Com a aprovação de todos, clica-se em **"Merge pull request"** e depois em **"Confirm merge"**.
-3. O código daquela parte agora faz parte da `main` oficial!
-
----
-
-### Passo 11: Atualizar a cópia local com git pull
-Após qualquer merge na `main` no GitHub, todos os colegas devem atualizar suas máquinas locais para receber o trabalho integrado:
-```bash
-# 1. Muda para a main
-git switch main
-
-# 2. Puxa as alterações mais recentes
-git pull origin main
-```
-Para trazer essas novidades para a sua branch individual de trabalho:
-```bash
-git switch feature/sua-branch
-git merge main
-```
-
----
-
-### Passo 12: Como reconhecer e resolver conflitos com cuidado
-Se dois integrantes editarem as mesmas linhas de código, o Git indicará um conflito durante o merge:
-1. O Git colocará marcações no arquivo conflitante:
-   ```text
-   <<<<<<< HEAD
-   (O código que estava na sua branch)
-   =======
-   (O código que veio da main ou do colega)
-   >>>>>>> main
-   ```
-2. **Comunique-se:** Chame o colega no chat ou chamada e analisem juntos o trecho.
-3. Edite o arquivo no seu editor (VS Code ou Antigravity), escolha o código correto e apague as linhas `<<<<<<<`, `=======` e `>>>>>>>`.
-4. Finalize o processo:
+### Passo 7: Revisão de Código e Integração (Merge)
+1. Pelo menos um colega de equipe deve revisar as alterações na aba **"Files changed"** do Pull Request.
+2. Com a aprovação da equipe, o PR é integrado clicando em **"Merge pull request"** e depois **"Confirm merge"**.
+3. Em seguida, todos os integrantes executam em suas máquinas locais:
    ```bash
-   git add <arquivo_resolvido>
-   git commit -m "Resolve conflito de integracao entre modulos"
-   git push
+   git switch main
+   git pull origin main
    ```
+   E atualizam suas branches individuais com `git merge main` para manter todos os trabalhos sincronizados.
 
 ---
 
-## 🧩 10. Pendências de Planejamento para a Integração Futura
+## 🧪 9. Planejamento de Testes Futuros
 
-Os quatro arquivos **não funcionarão juntos automaticamente** apenas por existirem no mesmo diretório. Antes de qualquer pessoa começar a escrever código, a equipe deve se reunir e definir:
-
-1. **Representação do Tabuleiro:**
-   - Será uma matriz (lista de listas 20x10) de números (0 para vazio, 1 a 7 para peças) ou de strings com códigos hexadecimais de cores?
-2. **Armazenamento e Formato das Peças:**
-   - As peças serão matrizes (ex: 3x3 ou 4x4) rotacionadas matematicamente ou listas com as 4 coordenadas relativas `[(x1,y1), (x2,y2), ...]` pré-calculadas para cada uma das 4 rotações?
-3. **Comunicação entre Módulos:**
-   - Utilizaremos Programação Orientada a Objetos (classes `Tabuleiro`, `Peca`, `Jogo`) ou funções puras compartilhando um dicionário de estado?
-4. **Responsabilidade do Desenho:**
-   - O `parte1_tabuleiro.py` apenas oferecerá uma função genérica de pintar blocos, ou receberá o estado completo para renderizar de uma vez só?
-5. **Verificação de Colisões:**
-   - O módulo de colisão receberá a peça e a matriz do tabuleiro a cada tentativa de movimento e responderá com um booleano (`True`/`False`)?
-6. **Coordenação do Laço Temporal:**
-   - Como o `parte4_jogo_completo.py` sincronizará a taxa de queda das peças com os eventos de teclado sem travar a interface do Tkinter?
-
-> **Ação recomendada:** Façam uma conversa de alinhamento para responder esses 6 pontos antes de iniciar a codificação!
+Consulte o documento [tests/README.md](file:///c:/Users/lucas/Documents/tetris-python-tkinter/tests/README.md) para verificar os testes planejados para cada classe e método do jogo antes de iniciar a programação.
 
 ---
 
-## 🎓 11. Roteiro de Apresentação para o Professor
+## 🎓 10. Roteiro para Apresentação ao Professor
 
-Quando o projeto estiver pronto, sugerimos este roteiro para a apresentação:
-
-1. **Abertura e Apresentação da Equipe (1 a 2 min):**
-   - Apresentação dos 4 integrantes, seus papéis e a divisão de ferramentas (Antigravity para o proprietário, VS Code para os demais integrantes).
-   - Destaque para o uso de ferramentas padrão e universais sem atritos de compatibilidade.
-2. **Demonstração do Fluxo Colaborativo no GitHub (2 a 3 min):**
-   - Mostrar o repositório privado no GitHub.
-   - Exibir as branches, Pull Requests revisados e histórico de commits de cada participante.
-3. **Explicação Modular dos Componentes (3 a 4 min):**
-   - *Integrante 1:* Explica o Canvas e a grade visual no Tkinter.
-   - *Integrante 2:* Explica a matemática das 7 peças e o sistema de rotação.
-   - *Integrante 3:* Explica os algoritmos de colisão, fixação e eliminação de linhas.
-   - *Integrante 4:* Explica a orquestração do loop principal, eventos de teclado e controle de pontuação.
-4. **Demonstração do Jogo em Ação (3 a 5 min):**
-   - Executar `python parte4_jogo_completo.py`.
-   - Jogar uma partida: demonstrar movimentação, rotação, eliminação de linhas, pontuação e Game Over.
-5. **Conclusão e Lições Aprendidas (1 a 2 min):**
-   - Compartilhar a experiência do trabalho em equipe com editores híbridos (Antigravity + VS Code), superação de conflitos no Git e modularização em Python.
+1. **Abertura e Arquitetura (2 min):** Apresentar a equipe e a arquitetura em 4 camadas (Domínio, Formas, Motor e Interfaces).
+2. **Fluxo Colaborativo no GitHub (2 min):** Mostrar o histórico de branches, revisões de código e Pull Requests aprovados.
+3. **Módulos Individuais (4 min):** Cada integrante explica seu arquivo, destacando herança, imutabilidade, encapsulamento e regras.
+4. **Demonstração Prática (4 min):**
+   - Execução de `python tetris_terminal.py` comprovando a lógica no console.
+   - Execução de `python tetris_gui.py` jogando na interface gráfica Tkinter.
+5. **Conclusão (1 min):** Lições aprendidas em POO e trabalho colaborativo.
