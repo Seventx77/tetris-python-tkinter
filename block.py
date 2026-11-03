@@ -62,12 +62,12 @@ ATENÇÃO:
 
 
 '''Código principal do módulo block.py'''
-#from exceptions import InvalidBlockError
+from exceptions import InvalidBlockError
 
 class  Block:
     def __init__(self, x:int, y:int):
         if x < 0 or y < 0:
-            raise ValueError("Coordenadas do bloco não podem ser negativas")
+            raise InvalidBlockError("Coordenadas do bloco não podem ser negativas")
             
         self._x = x
         self._y = y
