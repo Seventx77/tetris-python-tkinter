@@ -14,126 +14,234 @@ CONCEITOS DE OO E ESPECIFICAÇÕES DO PROFESSOR:
     - Fórmula de rotação horária de 90°: (x, y) ──> (box_size - 1 - y, x).
     - Métodos de rotação oficiais: right_rotate() (sentido horário) e left_rotate() (sentido anti-horário).
     - Método __str__() para renderizar a caixa no terminal com ⬜ nas células ocupadas e ⬛ nas vazias.
-
-ATENÇÃO:
-    NENHUM CÓDIGO FUNCIONAL FOI IMPLEMENTADO AINDA.
-    A PROGRAMAÇÃO AINDA NÃO COMEÇOU.
-    Este arquivo contém apenas comentários explicativos e marcadores TODO.
 """
 
-# ==============================================================================
-# PLANEJAMENTO DAS CLASSES DE TETRAMINÓS (INTEGRANTE 2)
-# ==============================================================================
 
-# TODO: Importar dependências:
-#       from abc import ABC, abstractmethod
-#       from typing import Tuple
-#       from block import Block
-#       from exceptions import InvalidRotationError
+from abc import ABC, abstractmethod
+from typing import Tuple
+from block import Block
+"""from exceptions import InvalidRotationError"""
 
-# TODO: Definir o alias de tipo para as formas:
-#       TetriminoShape = Tuple[Block, Block, Block, Block]
+TetriminoShape = Tuple[Block, Block, Block, Block]
 
-# TODO: Planejar a classe base abstrata Tetrimino:
-#       class Tetrimino(ABC):
-#           """
-#           Classe base abstrata para todos os tetraminós do jogo.
-#           """
-#           _NUMBER_OF_ROTATIONS: int = 4
-#
-#           def __init__(self, initial_rotation: int = 0):
-#               # 1. Validar se initial_rotation está no intervalo [0, _NUMBER_OF_ROTATIONS - 1].
-#               #    Se inválido, lançar InvalidRotationError.
-#               # 2. Obter forma original através de self._original_shape().
-#               # 3. Calcular self._box_size = 1 + max(max(b.x, b.y) for b in original_shape).
-#               # 4. Pré-calcular as 4 rotações (armazenadas em self._shapes) aplicando
-#               #    self._rotate_shape repetidamente.
-#               # 5. Inicializar self._rotation = initial_rotation.
-#               pass
-#
-#           @property
-#           @abstractmethod
-#           def color(self) -> str:
-#               """Retorna a cor da peça no formato '#rrggbb' (somente leitura)."""
-#               pass
-#
-#           @abstractmethod
-#           def _original_shape(self) -> TetriminoShape:
-#               """Método abstrato que retorna os 4 blocos da rotação 0."""
-#               pass
-#
-#           @staticmethod
-#           def _rotate_shape(shape: TetriminoShape, box_size: int) -> TetriminoShape:
-#               """
-#               Método estático que gira uma forma 90° no sentido horário:
-#               (x, y) -> (box_size - 1 - y, x)
-#               Retorna uma nova tupla de 4 instâncias de Block.
-#               """
-#               pass
-#
-#           @property
-#           def box_size(self) -> int:
-#               """Retorna o tamanho do lado da caixa delimitadora (somente leitura)."""
-#               pass
-#
-#           @property
-#           def shape(self) -> TetriminoShape:
-#               """Retorna os blocos da rotação atual (somente leitura)."""
-#               pass
-#
-#           @property
-#           def current_rotation(self) -> int:
-#               """Retorna o número da rotação atual de 0 a 3 (somente leitura)."""
-#               pass
-#
-#           def right_rotate(self):
-#               """Avança para a próxima rotação no sentido horário (0 -> 1 -> 2 -> 3 -> 0)."""
-#               pass
-#
-#           def left_rotate(self):
-#               """Volta para a rotação anterior no sentido anti-horário (0 <- 1 <- 2 <- 3 <- 0)."""
-#               pass
-#
-#           def __str__(self) -> str:
-#               """
-#               Desenha a caixa delimitadora com ⬜ nas células ocupadas
-#               e ⬛ nas células vazias, uma linha por y.
-#               """
-#               pass
+class Tetrimino(ABC):
+    """
+    Classe base abstrata para todos os tetraminós do jogo.
+    """
+    _NUMBER_OF_ROTATIONS: int = 4
 
-# TODO: Planejar as 7 subclasses com formas e cores exatas do PDF:
-#
-#       class TetriminoI(Tetrimino):
-#           # Forma original (0): (0,1), (1,1), (2,1), (3,1)
-#           # Cor: '#00f0f0' | box_size: 4
-#           pass
-#
-#       class TetriminoJ(Tetrimino):
-#           # Forma original (0): (0,0), (0,1), (1,1), (2,1)
-#           # Cor: '#0000f0' | box_size: 3
-#           pass
-#
-#       class TetriminoL(Tetrimino):
-#           # Forma original (0): (2,0), (0,1), (1,1), (2,1)
-#           # Cor: '#f0a000' | box_size: 3
-#           pass
-#
-#       class TetriminoO(Tetrimino):
-#           # Forma original (0): (0,0), (1,0), (0,1), (1,1)
-#           # Cor: '#f0f000' | box_size: 2
-#           pass
-#
-#       class TetriminoS(Tetrimino):
-#           # Forma original (0): (1,0), (2,0), (0,1), (1,1)
-#           # Cor: '#00f000' | box_size: 3
-#           pass
-#
-#       class TetriminoT(Tetrimino):
-#           # Forma original (0): (1,0), (0,1), (1,1), (2,1)
-#           # Cor: '#a000f0' | box_size: 3
-#           pass
-#
-#       class TetriminoZ(Tetrimino):
-#           # Forma original (0): (0,0), (1,0), (1,1), (2,1)
-#           # Cor: '#f00000' | box_size: 3
-#           pass
+    def __init__(self, initial_rotation: int = 0):
+        if initial_rotation < 0 or initial_rotation > self._NUMBER_OF_ROTATIONS - 1:
+            raise ValueError("Invalid initial rotation value.")
+
+        self._rotation = initial_rotation
+        original_shape = self.original_shape()
+        self._shapes = [original_shape]
+
+        self._box_size = 1 + max(max(b.x, b.y) for b in original_shape)
+        for _ in range(3):
+            novo_shape = self._rotate_shape(self._shapes[-1], self.box_size)
+            self._shapes.append(novo_shape)
+        
+    @staticmethod
+    def _rotate_shape(forma, box_size: int) -> TetriminoShape:
+            """
+            Método estático que gira uma forma 90° no sentido horário:
+            (x, y) -> (box_size - 1 - y, x)
+            Retorna uma nova tupla de 4 instâncias de Block.
+            """
+            nova_forma = []
+            for bloco in forma:
+                nova_forma.append(Block((box_size - 1 - bloco.y), bloco.x))
+            nova_forma = tuple(nova_forma)
+            return nova_forma
+        
+     
+
+    @abstractmethod
+    def original_shape(self) -> TetriminoShape:
+        """Método abstrato que retorna os 4 blocos da rotação 0."""
+        pass
+
+    @property
+    @abstractmethod
+    def color(self) -> str:
+         pass
+
+    @property
+    def box_size(self):
+        return self._box_size
+
+    @property
+    def shape(self) -> TetriminoShape:
+        """Retorna os blocos da rotação atual (somente leitura)."""
+        return self._shapes[self._rotation]
+    @property
+    def current_rotation(self) -> int:
+        """Retorna o número da rotação atual de 0 a 3 (somente leitura)."""
+        return self._rotation
+
+    def right_rotate(self):
+        """Avança para a próxima rotação no sentido horário (0 -> 1 -> 2 -> 3 -> 0)."""
+        t = self._rotation + 1
+        if t  == 4:
+            self._rotation = 0
+        else:
+            self._rotation +=1
+    
+
+    def left_rotate(self):
+        """Volta para a rotação anterior no sentido anti-horário (0 <- 1 <- 2 <- 3 <- 0)."""
+        if self._rotation == 0:
+            self._rotation = 3
+        else:
+            self._rotation -= 1
+
+    def __str__(self) -> str:
+        """
+        Desenha a caixa delimitadora com ⬜ nas células ocupadas
+        e ⬛ nas células vazias, uma linha por y.
+        """
+        r =''
+        for y in range(self.box_size):
+            for x in range(self.box_size):
+                ocupado = False
+                for i in self.shape:
+                    if x == i.x and y == i.y:
+                        ocupado = True
+
+                if ocupado == True:
+                        r += '⬜'
+                else:
+                        r+='⬛'
+            r+='\n'
+        return r
+                     
+
+
+class TetriminoI(Tetrimino):
+
+         
+    @property
+    def color(self):
+         return '#00f0f0'
+    def original_shape(self):
+         forma = (Block(0,1), Block(1,1), Block(2,1), Block(3,1))
+         return forma
+
+class TetriminoJ(Tetrimino):
+
+    @property
+    def color(self):
+        return '#0000f0'
+
+    def original_shape(self) -> TetriminoShape:
+        forma = (
+            Block(0, 0),
+            Block(0, 1),
+            Block(1, 1),
+            Block(2, 1)
+        )
+        return forma
+
+
+class TetriminoL(Tetrimino):
+
+    @property
+    def color(self):
+        return '#f0a000'
+
+    def original_shape(self) -> TetriminoShape:
+        forma = (
+            Block(2, 0),
+            Block(0, 1),
+            Block(1, 1),
+            Block(2, 1)
+        )
+        return forma
+
+
+class TetriminoO(Tetrimino):
+
+    @property
+    def color(self):
+        return '#f0f000'
+
+    def original_shape(self) -> TetriminoShape:
+        forma = (
+            Block(0, 0),
+            Block(1, 0),
+            Block(0, 1),
+            Block(1, 1)
+        )
+        return forma
+
+
+class TetriminoS(Tetrimino):
+
+    @property
+    def color(self):
+        return '#00f000'
+
+    def original_shape(self) -> TetriminoShape:
+        forma = (
+            Block(1, 0),
+            Block(2, 0),
+            Block(0, 1),
+            Block(1, 1)
+        )
+        return forma
+
+
+class TetriminoT(Tetrimino):
+
+    @property
+    def color(self):
+        return '#a000f0'
+
+    def original_shape(self) -> TetriminoShape:
+        forma = (
+            Block(1, 0),
+            Block(0, 1),
+            Block(1, 1),
+            Block(2, 1)
+        )
+        return forma
+
+
+class TetriminoZ(Tetrimino):
+
+    @property
+    def color(self):
+        return '#f00000'
+
+    def original_shape(self) -> TetriminoShape:
+        forma = (
+            Block(0, 0),
+            Block(1, 0),
+            Block(1, 1),
+            Block(2, 1)
+        )
+        return forma
+
+
+
+
+        
+pecas = [
+        TetriminoI(),
+        TetriminoJ(),
+        TetriminoL(),
+        TetriminoO(),
+        TetriminoS(),
+        TetriminoT(),
+        TetriminoZ()
+    ]
+
+for peca in pecas:
+        print(f'{peca.__class__.__name__}')
+        print(peca)
+        print(f'Cor: {peca.color}')
+        print(f'Tamanho: {peca.box_size}')
+        print('-' * 20)
+
