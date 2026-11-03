@@ -1,174 +1,161 @@
 """
 MÓDULO: tetris.py
 RESPONSÁVEL: Integrante 3 (Modelo do Jogo e Regras de Negócio)
-DESCRIÇÃO:
-    Este módulo implementa a classe Tetris, o motor central do jogo.
-    Define o tabuleiro 10x18, gerencia a peça ativa, aplica as regras de
-    movimentação, rotação, colisão, travamento (_lock) e eliminação de linhas,
-    de forma totalmente independente de qualquer interface com o usuário.
 
-ESPECIFICAÇÕES EXATAS DO PROFESSOR (PDF):
-    - DEFAULT_WIDTH: int = 10
-    - DEFAULT_HEIGHT: int = 18
-    - _TETRIMINOS: tupla com as 7 classes de peças para uso com random.choice.
-    - _grid: matriz [coluna][linha] contendo a cor do bloco ou None se vazia.
-    - O tetraminó ativo NÃO é gravado no _grid enquanto cai, apenas ao ser fixado.
-    - Posicionamento da nova peça no topo: col = (width - box_size) // 2, row = 0.
-    - Se a nova peça não couber imediatamente na posição inicial, marca _game_over = True.
-    - REGRA CRÍTICA: Depois do fim de jogo, os comandos de movimento não têm efeito.
-    - color_at(col, row) é o ÚNICO método que as interfaces precisam para desenhar.
+Modelo do jogo: tabuleiro 10x18, peça ativa, movimentos, colisões,
+fixação (_lock) e eliminação de linhas. Não tem print, input nem interface.
 
-ATENÇÃO:
-    NENHUM CÓDIGO FUNCIONAL FOI IMPLEMENTADO AINDA.
-    A PROGRAMAÇÃO AINDA NÃO COMEÇOU.
-    Este arquivo contém apenas comentários explicativos e marcadores TODO.
+Convenções (PDF do professor):
+  - _grid[coluna][linha] guarda a cor '#rrggbb' ou None se vazia
+  - x = coluna (esquerda -> direita), y = linha (cima -> baixo)
+  - (_tetri_col, _tetri_row) é o canto superior esquerdo da caixa da peça
 """
 
-# ==============================================================================
-# PLANEJAMENTO DA CLASSE TETRIS (INTEGRANTE 3)
-# ==============================================================================
+import random
+from typing import List, Optional, Tuple
 
-# TODO: Importar dependências:
-#       import random
-#       from typing import Optional, List, Tuple
-#       from tetriminos import (
-#           Tetrimino, TetriminoI, TetriminoJ, TetriminoL,
-#           TetriminoO, TetriminoS, TetriminoT, TetriminoZ
-#       )
+from tetriminos import (
+    Tetrimino, TetriminoI, TetriminoJ, TetriminoL,
+    TetriminoO, TetriminoS, TetriminoT, TetriminoZ,
+)
 
-# TODO: Planejar a classe Tetris conforme o diagrama UML e o PDF:
-#       class Tetris:
-#           DEFAULT_WIDTH: int = 10
-#           DEFAULT_HEIGHT: int = 18
-#           _TETRIMINOS = (
-#               TetriminoI, TetriminoJ, TetriminoL, TetriminoO,
-#               TetriminoS, TetriminoT, TetriminoZ
-#           )
-#
-#           def __init__(self):
-#               # Inicializar _grid como matriz [coluna][linha] com dimensões 10x18 preenchida com None.
-#               # Inicializar atributos:
-#               #   self._tetri_active: Optional[Tetrimino] = None
-#               #   self._tetri_col: int = 0
-#               #   self._tetri_row: int = 0
-#               #   self._game_over: bool = False
-#               # Invocar self.reset() para preparar o primeiro jogo.
-#               pass
-#
-#           # ------------------------------------------------------------------
-#           # Propriedades de Consulta Pública
-#           # ------------------------------------------------------------------
-#           @property
-#           def width(self) -> int:
-#               """Retorna a largura do tabuleiro (10 colunas)."""
-#               pass
-#
-#           @property
-#           def height(self) -> int:
-#               """Retorna a altura do tabuleiro (18 linhas)."""
-#               pass
-#
-#           @property
-#           def game_over(self) -> bool:
-#               """Retorna se a partida terminou."""
-#               pass
-#
-#           @property
-#           def active_tetrimino(self) -> Optional[Tetrimino]:
-#               """Retorna a peça ativa que está caindo."""
-#               pass
-#
-#           def color_at(self, column: int, row: int) -> Optional[str]:
-#               """
-#               Retorna a cor da célula na posição (column, row).
-#               Considera primeiro os blocos da peça ativa; se não houver, consulta _grid[column][row].
-#               Retorna None se a célula estiver vazia.
-#               """
-#               pass
-#
-#           # ------------------------------------------------------------------
-#           # Comandos de Ação do Jogo
-#           # ------------------------------------------------------------------
-#           def reset(self):
-#               """Limpa o tabuleiro, desfaz o fim de jogo e sorteia uma nova peça."""
-#               pass
-#
-#           def move_left(self):
-#               """
-#               Move a peça ativa uma coluna para a esquerda se couber.
-#               Não tem efeito se self.game_over for True.
-#               """
-#               pass
-#
-#           def move_right(self):
-#               """
-#               Move a peça ativa uma coluna para a direita se couber.
-#               Não tem efeito se self.game_over for True.
-#               """
-#               pass
-#
-#           def move_down(self):
-#               """
-#               Desce a peça ativa uma linha. Se não couber embaixo, fixa a peça (_lock).
-#               Não tem efeito se self.game_over for True.
-#               """
-#               pass
-#
-#           def drop(self):
-#               """
-#               Desce a peça repetidamente até onde ela conseguir e fixa a peça.
-#               Não tem efeito se self.game_over for True.
-#               """
-#               pass
-#
-#           def rotate(self):
-#               """
-#               Gira a peça no sentido horário (right_rotate).
-#               Se não couber na nova orientação, desfaz o giro com left_rotate().
-#               Não tem efeito se self.game_over for True.
-#               """
-#               pass
-#
-#           # ------------------------------------------------------------------
-#           # Métodos Auxiliares Internos (Protegidos)
-#           # ------------------------------------------------------------------
-#           def _tetri_cells(self, col: int, row: int) -> List[Tuple[int, int]]:
-#               """
-#               Calcula as posições do tabuleiro (c, r) que os blocos da peça ativa
-#               ocupariam se sua caixa estivesse em (col, row):
-#               c = col + bloco.x
-#               r = row + bloco.y
-#               """
-#               pass
-#
-#           def _tetri_fits(self, col: int, row: int) -> bool:
-#               """
-#               Retorna True se todos os blocos em (col, row) estiverem dentro dos limites
-#               do tabuleiro e em células vazias (_grid[c][r] is None).
-#               """
-#               pass
-#
-#           def _new_tetrimino(self):
-#               """
-#               Sorteia uma classe de tetraminó de _TETRIMINOS via random.choice,
-#               posiciona a caixa centralizada no topo:
-#               col = (self.width - peca.box_size) // 2
-#               row = 0
-#               Marca self._game_over = True se a peça sorteada não couber nessa posição.
-#               """
-#               pass
-#
-#           def _lock(self):
-#               """
-#               Grava permanentemente os blocos da peça ativa no _grid,
-#               remove as linhas completas via _clear_rows() e cria uma nova peça.
-#               """
-#               pass
-#
-#           def _clear_rows(self):
-#               """
-#               Remove as linhas completas do tabuleiro, descendo as de cima.
-#               Atenção à dica do professor: depois de remover uma linha, a mesma
-#               linha precisa ser verificada de novo, pois agora contém o que estava acima.
-#               """
-#               pass
+
+class Tetris:
+    DEFAULT_WIDTH: int = 10
+    DEFAULT_HEIGHT: int = 18
+    _TETRIMINOS = (
+        TetriminoI, TetriminoJ, TetriminoL, TetriminoO,
+        TetriminoS, TetriminoT, TetriminoZ,
+    )
+
+    def __init__(self):
+        self._grid: List[List[Optional[str]]] = []
+        self._tetri_active: Optional[Tetrimino] = None
+        self._tetri_col: int = 0
+        self._tetri_row: int = 0
+        self._game_over: bool = False
+        self.reset()
+
+    # ------------------------------------------------------------------
+    # Consulta pública
+    # ------------------------------------------------------------------
+    @property
+    def width(self) -> int:
+        return self.DEFAULT_WIDTH
+
+    @property
+    def height(self) -> int:
+        return self.DEFAULT_HEIGHT
+
+    @property
+    def game_over(self) -> bool:
+        return self._game_over
+
+    @property
+    def active_tetrimino(self) -> Optional[Tetrimino]:
+        return self._tetri_active
+
+    def color_at(self, column: int, row: int) -> Optional[str]:
+        """Cor da célula, considerando também a peça ativa. None se vazia."""
+        if self._tetri_active is not None:
+            if (column, row) in self._tetri_cells(self._tetri_col, self._tetri_row):
+                return self._tetri_active.color
+        if 0 <= column < self.width and 0 <= row < self.height:
+            return self._grid[column][row]
+        return None
+
+    # ------------------------------------------------------------------
+    # Comandos
+    # ------------------------------------------------------------------
+    def reset(self):
+        """Limpa o tabuleiro, desfaz o fim de jogo e sorteia uma nova peça."""
+        self._grid = [[None] * self.height for _ in range(self.width)]
+        self._game_over = False
+        self._new_tetrimino()
+
+    def move_left(self):
+        if self._game_over:
+            return
+        if self._tetri_fits(self._tetri_col - 1, self._tetri_row):
+            self._tetri_col -= 1
+
+    def move_right(self):
+        if self._game_over:
+            return
+        if self._tetri_fits(self._tetri_col + 1, self._tetri_row):
+            self._tetri_col += 1
+
+    def move_down(self):
+        """Desce uma linha. Se não couber, fixa a peça."""
+        if self._game_over:
+            return
+        if self._tetri_fits(self._tetri_col, self._tetri_row + 1):
+            self._tetri_row += 1
+        else:
+            self._lock()
+
+    def drop(self):
+        """Desce até onde conseguir e fixa a peça."""
+        if self._game_over:
+            return
+        while self._tetri_fits(self._tetri_col, self._tetri_row + 1):
+            self._tetri_row += 1
+        self._lock()
+
+    def rotate(self):
+        """Gira no sentido horário. Se não couber, desfaz o giro."""
+        if self._game_over:
+            return
+        self._tetri_active.right_rotate()
+        if not self._tetri_fits(self._tetri_col, self._tetri_row):
+            self._tetri_active.left_rotate()
+
+    # ------------------------------------------------------------------
+    # Auxiliares internos (colisões, fixação e linhas)
+    # ------------------------------------------------------------------
+    def _tetri_cells(self, col: int, row: int) -> List[Tuple[int, int]]:
+        """Células do tabuleiro que a peça ativa ocuparia com a caixa em (col, row)."""
+        return [(col + bloco.x, row + bloco.y) for bloco in self._tetri_active.shape]
+
+    def _tetri_fits(self, col: int, row: int) -> bool:
+        """True se todos os blocos estão dentro do tabuleiro e em células vazias."""
+        for c, r in self._tetri_cells(col, row):
+            if c < 0 or c >= self.width or r < 0 or r >= self.height:
+                return False
+            if self._grid[c][r] is not None:
+                return False
+        return True
+
+    def _new_tetrimino(self):
+        """Sorteia uma peça, centraliza no topo e marca fim de jogo se não couber."""
+        peca = random.choice(self._TETRIMINOS)()
+        self._tetri_active = peca
+        self._tetri_col = (self.width - peca.box_size) // 2
+        self._tetri_row = 0
+        if not self._tetri_fits(self._tetri_col, self._tetri_row):
+            self._game_over = True
+
+    def _lock(self):
+        """Grava a peça no _grid, remove linhas completas e cria nova peça."""
+        cor = self._tetri_active.color
+        for c, r in self._tetri_cells(self._tetri_col, self._tetri_row):
+            self._grid[c][r] = cor
+        self._clear_rows()
+        self._new_tetrimino()
+
+    def _clear_rows(self) -> int:
+        """Remove as linhas completas, descendo as de cima. Retorna quantas removeu."""
+        removidas = 0
+        r = self.height - 1
+        while r >= 0:
+            if all(self._grid[c][r] is not None for c in range(self.width)):
+                for rr in range(r, 0, -1):
+                    for c in range(self.width):
+                        self._grid[c][rr] = self._grid[c][rr - 1]
+                for c in range(self.width):
+                    self._grid[c][0] = None
+                removidas += 1
+                # não decrementa r: a mesma linha agora contém o que estava acima
+            else:
+                r -= 1
+        return removidas
