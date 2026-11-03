@@ -20,7 +20,7 @@ CONCEITOS DE OO E ESPECIFICAÇÕES DO PROFESSOR:
 from abc import ABC, abstractmethod
 from typing import Tuple
 from block import Block
-"""from exceptions import InvalidRotationError"""
+from exceptions import InvalidRotationError
 
 TetriminoShape = Tuple[Block, Block, Block, Block]
 
@@ -32,7 +32,7 @@ class Tetrimino(ABC):
 
     def __init__(self, initial_rotation: int = 0):
         if initial_rotation < 0 or initial_rotation > self._NUMBER_OF_ROTATIONS - 1:
-            raise ValueError("Invalid initial rotation value.")
+            raise InvalidRotationError("Invalid initial rotation value.")
 
         self._rotation = initial_rotation
         original_shape = self.original_shape()
