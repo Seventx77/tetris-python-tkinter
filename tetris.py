@@ -36,9 +36,7 @@ class Tetris:
         self._game_over: bool = False
         self.reset()
 
-    # ------------------------------------------------------------------
-    # Consulta pública
-    # ------------------------------------------------------------------
+
     @property
     def width(self) -> int:
         return self.DEFAULT_WIDTH
@@ -64,9 +62,7 @@ class Tetris:
             return self._grid[column][row]
         return None
 
-    # ------------------------------------------------------------------
-    # Comandos
-    # ------------------------------------------------------------------
+
     def reset(self):
         """Limpa o tabuleiro, desfaz o fim de jogo e sorteia uma nova peça."""
         self._grid = [[None] * self.height for _ in range(self.width)]
@@ -110,9 +106,7 @@ class Tetris:
         if not self._tetri_fits(self._tetri_col, self._tetri_row):
             self._tetri_active.left_rotate()
 
-    # ------------------------------------------------------------------
-    # Auxiliares internos (colisões, fixação e linhas)
-    # ------------------------------------------------------------------
+    
     def _tetri_cells(self, col: int, row: int) -> List[Tuple[int, int]]:
         """Células do tabuleiro que a peça ativa ocuparia com a caixa em (col, row)."""
         return [(col + bloco.x, row + bloco.y) for bloco in self._tetri_active.shape]
@@ -155,7 +149,7 @@ class Tetris:
                 for c in range(self.width):
                     self._grid[c][0] = None
                 removidas += 1
-                # não decrementa r: a mesma linha agora contém o que estava acima
+                
             else:
                 r -= 1
         return removidas
