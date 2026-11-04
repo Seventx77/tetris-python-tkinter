@@ -1,59 +1,95 @@
-"""
-MÓDULO: tetris_terminal.py
-RESPONSÁVEL: Integrante 4 (Interfaces: Terminal e Gráfica)
-DESCRIÇÃO:
-    Este módulo implementa a interface em modo texto (terminal/console) para o
-    jogo Tetris, conforme a especificação do professor.
+from tetris import Tetris
 
-REQUISITOS DO PROFESSOR:
-    - As interfaces NÃO implementam regra de jogo nenhuma.
-    - Mostram o estado do jogo usando apenas width, height, color_at e game_over.
-    - Função: colored_board(game: Tetris) -> str (pinta cada bloco com a cor da peça usando códigos ANSI).
-    - Lê um comando por vez:
-        'a' / 'd': esquerda / direita
-        's': descer
-        'w': girar
-        'x': derrubar
-        'q': sair
 
-ATENÇÃO:
-    NENHUM CÓDIGO FUNCIONAL FOI IMPLEMENTADO AINDA.
-    A PROGRAMAÇÃO AINDA NÃO COMEÇOU.
-    Este arquivo contém apenas comentários explicativos e marcadores TODO.
-"""
+def colored_board(game: Tetris) -> str:
+    RESET = "\033[0m"
 
-# ==============================================================================
-# PLANEJAMENTO DA INTERFACE TEXTUAL (INTEGRANTE 4)
-# ==============================================================================
+    linhas = []
+    borda = "+" + "---" * game.width + "+"
+    linhas.append(borda)
 
-# TODO: Importar o modelo central do Tetris:
-#       from tetris import Tetris
+    for linha in range(game.height):
+        texto = "|"
 
-# TODO: Planejar a função de renderização textual com cores ANSI:
-#       def colored_board(game: Tetris) -> str:
-#           """
-#           Gera e retorna a representação em string do estado do tabuleiro:
-#           - Itera sobre as linhas de 0 até game.height - 1 e colunas de 0 até game.width - 1.
-#           - Consulta color = game.color_at(c, r).
-#           - Se color for None, exibe célula vazia (ex: ' . ').
-#           - Se houver cor, renderiza o bloco usando códigos de cor ANSI de acordo com color.
-#           - Inclui bordas laterais e inferiores.
-#           """
-#           pass
+        for coluna in range(game.width):
+            cor = game.color_at(coluna, linha)
 
-# TODO: Planejar o laço principal de jogo no console:
-#       def main():
-#           """
-#           1. Instancia o jogo: game = Tetris()
-#           2. Enquanto not game.game_over:
-#              a. Imprime colored_board(game).
-#              b. Lê a tecla via input("Comando: ").
-#              c. Repassa o comando para game.move_left(), move_right(), move_down(),
-#                 rotate(), drop(), ou sai do loop se 'q'.
-#           3. Exibe mensagem de Fim de Jogo quando game.game_over for True.
-#           """
-#           pass
+            if cor is not None:
+                vermelho = int(cor[1:3], 16)
+                verde = int(cor[3:5], 16)
+                azul = int(cor[5:7], 16)
 
-# TODO: Ponto de entrada padrão:
-#       if __name__ == "__main__":
-#           main()
+                ansi = f"\033[48;2;{vermelho};{verde};{azul}m"
+                texto += f"{ansi}   {RESET}"
+            else:
+                texto += "   "
+
+        texto += "|"
+        linhas.append(texto)
+
+    linhas.append(borda)
+
+    return "\n".join(linhas)
+
+
+class TetrisTerminal:
+
+    def __init__(self):
+        self.game = Tetris()
+
+    def desenhar_tabuleiro(self):
+        print(colored_board(self.game))
+
+    def mostrar_menu(self):
+        print("\n========== TETRIS ==========")
+        print("A - Mover para esquerda")
+        print("D - Mover para direita")
+        print("S - Descer uma linha")
+        print("W - Girar peça")
+        print("X - Derrubar peça")
+        print("R - Reiniciar jogo")
+        print("Q - Sair")
+        print("============================")
+
+    def executar_comando(self, comando):
+        if comando == "a":
+            self.game.move_left()
+        elif comando == "d":
+            self.game.move_right()
+        elif comando == "s":
+            self.game.move_down()
+        elif comando == "w":
+            self.game.rotate()
+        elif comando == "x":
+            self.game.drop()
+        elif comando == "r":
+            self.game.reset()
+        elif comando == "q":
+            return False
+        else:
+            print("\nComando inválido!")
+
+        return True
+
+    def iniciar(self):
+        continuar = True
+
+        while continuar:
+            self.desenhar_tabuleiro()
+
+            if self.game.game_over:
+                print("\n========== GAME OVER ==========")
+                print("R - Jogar novamente")
+                print("Q - Sair")
+            else:
+                self.mostrar_menu()
+
+            comando = input("\nDigite seu comando: ").lower().strip()
+            continuar = self.executar_comando(comando)
+
+        print("\nObrigado por jogar Tetris!")
+
+
+if __name__ == "__main__":
+    jogo = TetrisTerminal()
+    jogo.iniciar()
