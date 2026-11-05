@@ -228,7 +228,8 @@ class TetriminoZ(Tetrimino):
 
 
         
-pecas = [
+if __name__ == '__main__':
+    pecas = [
         TetriminoI(),
         TetriminoJ(),
         TetriminoL(),
@@ -238,7 +239,7 @@ pecas = [
         TetriminoZ()
     ]
 
-for peca in pecas:
+    for peca in pecas:
         print(f'{peca.__class__.__name__}')
         print(peca)
         print(f'Cor: {peca.color}')
